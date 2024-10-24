@@ -7,9 +7,8 @@ This bash script automates the process of setting up an OpenVPN server on a Linu
 - Root or sudo access.
 - Ubuntu or Debian-based system.
 - Network interface (replace `ens18` with your interface name).
-- Arguments `Port Number` `Public IP` `VM IP` `VM Network ID` `VM Subnet Mask`
-    - Example 128.187.0.1 10.0.0.2 10.0.0.0 255.255.255.0
-
+- Arguments `Port Number` `Public IP` `VM IP` `VM Network ID` `VM Subnet Mask` `user`
+    - Example 128.187.0.1 10.0.0.2 10.0.0.0 255.255.255.0 ubuntu
 ### Steps
 
 1. **Update System and Install OpenVPN**:

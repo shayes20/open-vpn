@@ -2,15 +2,15 @@
  
 # First argument: Client identifier
 
-cd /home/$user/easy-rsa
+cd /home/$2/easy-rsa
 
 ./easyrsa --batch --days=3650 build-client-full "$1" nopass
 
-SERVER_KEY_DIR=/home/$user/client-configs/keys
-KEY_DIR=/home/$user/easy-rsa/pki/private/
-ISSUES_DIR=/home/$user/easy-rsa/pki/issued/
-OUTPUT_DIR=/home/$user/client-configs/files
-BASE_CONFIG=/home/$user/client-configs/base.conf
+SERVER_KEY_DIR=/home/$2/client-configs/keys
+KEY_DIR=/home/$2/easy-rsa/pki/private/
+ISSUES_DIR=/home/$2/easy-rsa/pki/issued/
+OUTPUT_DIR=/home/$2/client-configs/files
+BASE_CONFIG=/home/$2/client-configs/base.conf
 
 cat ${BASE_CONFIG} \
     <(echo -e '<ca>') \
@@ -24,5 +24,5 @@ cat ${BASE_CONFIG} \
     <(echo -e '</tls-crypt>') \
     > ${OUTPUT_DIR}/$1.ovpn
 
-chown $user:sudo ${OUTPUT_DIR}/$1.ovpn
+chown $2:sudo ${OUTPUT_DIR}/$1.ovpn
 chmod 700 ${OUTPUT_DIR}/$1.ovpn

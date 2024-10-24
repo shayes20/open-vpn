@@ -3,14 +3,14 @@
 apt update -y
 apt install openvpn easy-rsa -y
 
-mkdir /home/$user/easy-rsa
+mkdir /home/$6/easy-rsa
 
-ln -s /usr/share/easy-rsa/* /home/$user/easy-rsa/
+ln -s /usr/share/easy-rsa/* /home/$6/easy-rsa/
 
-sudo chown -R vpn:sudo /home/$user/easy-rsa
-sudo chmod -R 700 /home/$user/easy-rsa
+sudo chown -R vpn:sudo /home/$6/easy-rsa
+sudo chmod -R 700 /home/$6/easy-rsa
 
-cd /home/$user/easy-rsa
+cd /home/$6/easy-rsa
 ./easyrsa init-pki
 
 echo 'set_var EASYRSA_REQ_COUNTRY    "US"
@@ -21,40 +21,40 @@ set_var EASYRSA_REQ_EMAIL      ""
 set_var EASYRSA_REQ_OU         ""
 set_var EASYRSA_ALGO           "ec"
 set_var EASYRSA_DIGEST         "sha512"
-set_var EASYRSA_REQ_CN 		   ""'> /home/$user/easy-rsa/vars
+set_var EASYRSA_REQ_CN 		   ""'> /home/$6/easy-rsa/vars
 
 ./easyrsa --batch build-ca nopass
 
-cp /home/$user/easy-rsa/pki/ca.crt /usr/local/share/ca-certificates/
+cp /home/$6/easy-rsa/pki/ca.crt /usr/local/share/ca-certificates/
 update-ca-certificates
 
 ./easyrsa --batch gen-req server nopass
 
-cp /home/$user/easy-rsa/pki/private/server.key /etc/openvpn/server/
+cp /home/$6/easy-rsa/pki/private/server.key /etc/openvpn/server/
 
 ./easyrsa --batch sign-req server server
 
-cp /home/$user/easy-rsa/pki/issued/server.crt /etc/openvpn/server
-cp /home/$user/easy-rsa/pki/ca.crt /etc/openvpn/server
+cp /home/$6/easy-rsa/pki/issued/server.crt /etc/openvpn/server
+cp /home/$6/easy-rsa/pki/ca.crt /etc/openvpn/server
 
 openvpn --genkey secret ta.key
 
 cp ta.key /etc/openvpn/server
 
-mkdir -p /home/$user/client-configs/keys
-chmod -R 700 -R /home/$user/client-configs
-chown vpn:sudo -R /home/$user/client-configs
+mkdir -p /home/$6/client-configs/keys
+chmod -R 700 -R /home/$6/client-configs
+chown vpn:sudo -R /home/$6/client-configs
 
 ./easyrsa --batch gen-req clientDefault nopass
-mv /home/$user/easy-rsa/pki/private/clientDefault.key /home/$user/client-configs/keys/
+mv /home/$6/easy-rsa/pki/private/clientDefault.key /home/$6/client-configs/keys/
 
 ./easyrsa --batch sign-req client clientDefault
-mv /home/$user/easy-rsa/pki/issued/clientDefault.crt /home/$user/client-configs/keys/
+mv /home/$6/easy-rsa/pki/issued/clientDefault.crt /home/$6/client-configs/keys/
 
-cp /home/$user/easy-rsa/ta.key /home/$user/client-configs/keys/
+cp /home/$6/easy-rsa/ta.key /home/$6/client-configs/keys/
 
-cp /etc/openvpn/server/ca.crt /home/$user/client-configs/keys/
-chown vpn:sudo /home/$user/client-configs/keys/
+cp /etc/openvpn/server/ca.crt /home/$6/client-configs/keys/
+chown vpn:sudo /home/$6/client-configs/keys/
 
 cat <<EOF > /etc/openvpn/server/server.conf
 port $1
@@ -108,7 +108,7 @@ useradd nobody
 groupadd nobody
 
 ./easyrsa --batch --days=30 gen-crl
-cp /home/$user/easy-rsa/pki/crl.pem /etc/openvpn/server/crl.pem
+cp /home/$6/easy-rsa/pki/crl.pem /etc/openvpn/server/crl.pem
 
 chown nobody:nobody /etc/openvpn/server/crl.pem
 
@@ -117,13 +117,13 @@ systemctl start openvpn-server@server.service
 systemctl status openvpn-server@server.service
 
 
-mkdir /home/$user/client-configs/files
-chown vpn:sudo /home/$user/client-configs/files
-chmod 700 /home/$user/client-configs/files
+mkdir /home/$6/client-configs/files
+chown vpn:sudo /home/$6/client-configs/files
+chmod 700 /home/$6/client-configs/files
 
-touch /home/$user/client-configs/base.conf
-chown vpn:sudo /home/$user/client-configs/base.conf
-chmod 700 /home/$user/client-configs/base.conf
+touch /home/$6/client-configs/base.conf
+chown vpn:sudo /home/$6/client-configs/base.conf
+chmod 700 /home/$6/client-configs/base.conf
 
 echo "client
 dev tun
@@ -145,7 +145,7 @@ key-direction 1
 ; up /etc/openvpn/update-systemd-resolved
 ; down /etc/openvpn/update-systemd-resolved
 ; down-pre
-; dhcp-option DOMAIN-ROUTE ." >  /home/$user/client-configs/base.conf
+; dhcp-option DOMAIN-ROUTE ." >  /home/$6/client-configs/base.conf
 
 echo "[Unit]
 Before=network.target
